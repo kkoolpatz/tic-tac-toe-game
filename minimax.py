@@ -14,19 +14,6 @@ class Counter():
 
 counter = Counter()
 board_id = Counter(start = 0)
-scorecard = {
-    1: [],
-    2: [],
-    3: [],
-    4: [],
-    5: [],
-    6: [],
-    7: [],
-    8: [],
-    9: [],
-    10: [],
-}
-
 
 safe_options = set()
 
@@ -83,7 +70,6 @@ def minimax(board, turn, level):
     
     global counter
     global board_id
-    global scorecard
     global safe_options
     this_counter = next(counter.count())
     # print("DEBUG counter: ", this_counter)
@@ -91,26 +77,25 @@ def minimax(board, turn, level):
     if result is not None:
         if result == "X":
             # print_board(new_board, level, this_counter)
-            print("game over X won.")
+            # print("game over X won.")
             return -1
         elif result == "-":
-            print("game tied: ")
+            # print("game tied: ")
             return 0
         elif result == "O":
-            print("game over O won: ")
+            # print("game over O won: ")
             return 1
-    print("game is not over.")
+    # print("game is not over.")
 
     if turn == "X":
         best_score = 111110
     if turn == "O":
         best_score = -111110
-    best_move = None
 
     for row in range(0, 3):
         for col in range(0, 3):
             if board[row][col] == "":
-                print("level:", level,turn,"played, row: ", row, ", col: ", col)
+                # print("level:", level,turn,"played, row: ", row, ", col: ", col)
                 new_board = copy.deepcopy(board)
                 new_board[row][col] = turn
                 
@@ -124,72 +109,25 @@ def minimax(board, turn, level):
                 this_board_id = next(board_id.count())
                 # print("DEBUG this_board_id: ", this_board_id)
                 score =  minimax(new_board, new_turn, new_level)
-                
-                # ###########################
-                # if this_counter == 11:
-                #     print("#####################################")
-                #     print("parent id 11 debug info")
-                #     print("turn is:", turn)
-                #     print("new_turn is:", new_turn)
-                #     print("the current board is:", this_board_id)
-                #     print("the current score is:", score)
-                #     print("the best score is   :", best_score)
-                #     print_board(new_board, new_level, this_counter, score, this_board_id, best_move)
-                #     # print("#####################################")
-                # ###########################
-
-                # if this_board_id == 11:
-                #     print("#####################################")
-                #     print("board_id 11 debug info")
-                #     print("turn is:", turn)
-                #     print("new_turn is:", new_turn)
-                #     print("the current board is:", this_board_id)
-                #     print("the current score is:", score)
-                #     print("the best score is   :", best_score)
-                #     print_board(new_board, new_level, this_counter,
-                #                 score, this_board_id, best_move)
-                #     print("#####################################")
-                # ###########################
-
+              
                 if turn == "O":
                     # the score returned is from "O"
-                    # This means lower is to be passed forward
+                    # This means higher is to be passed forward
 
                     if score > best_score:
                         best_score = max(best_score, score)
                         best_move = (row, col)
-                    else:
-                        print("move: ", (row, col), "score:",
-                              score, "Not selected as best move")
+                    # else:
+                    #     print("move: ", (row, col), "score:",
+                    #           score, "Not selected as best move")
 
                 if turn == "X":
-                    # the score returned is from "O"
+                    # the score returned is from "X"
                     # This means lower is to be passed forward
                     if score < best_score:
                         best_score = min(best_score, score)
-                        best_move = (row, col)
-                
-                scorecard[new_level].append((score, row, col))
 
-                               
-                # if score > best_score:
-                best_move = (row, col)
-                print_board(new_board, new_level, this_counter, score, this_board_id, best_move)
-
-                    # best_score = score
-                # else: 
-                    # print_board(new_board, new_level, this_counter, score, this_board_id, best_move)
-        
-    if best_move is not None:
-    
-        # print("level: ", level, "best score: ", best_score, "best_move: ", best_move )
-        # if score > 1:
-        #     print("Best_move and score: ", best_move, score)
-        # return score
-        return best_score
-    else:
-        return -200
-
+    return best_score
 
 def impossible_ai(board):
 
@@ -205,7 +143,7 @@ def impossible_ai(board):
     for row in range(0, 3):
         for col in range(0, 3):
             if board[row][col] == "":
-                print("level:", 0,turn,"played, row: ", row, ", col: ", col)
+                # print("level:", 0,turn,"played, row: ", row, ", col: ", col)
                 new_board = copy.deepcopy(board)
                 new_board[row][col] = turn
 
@@ -226,8 +164,8 @@ def impossible_ai(board):
                     if score > best_score:
                         best_score = max(best_score, score)
                         best_move = (row, col)
-                    else: 
-                        print("move: ", (row, col), "score:", score, "Not selected as best move")
+                    # else: 
+                        # print("move: ", (row, col), "score:", score, "Not selected as best move")
 
                 if turn == "X":
                     # the score returned is from "O"
@@ -236,39 +174,12 @@ def impossible_ai(board):
                         best_score = min(best_score, score)
                         best_move = (row, col)
 
-                print_board(board, 0, this_counter, score, this_board_id, (row, col))
+                # print_board(board, 0, this_counter, score, this_board_id, (row, col))
 
-    if best_move is not None:
-        print("played: best move ", best_move, "score:", best_score)
-        return best_move
+    
+    # print("played: best move ", best_move, "score:", best_score)
+    return best_move
 
-    else: 
-        print("XXXXXXXX  Something went wrong !!!!  XXXXXXXX")
-        print("move ", best_move, "score:", best_score)
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
-    # print("Best Move: ", next_move)
-    global scorecard
-    global safe_options
-
-    for level in [1,2,3]:
-        if scorecard[level] != []:
-            print ("\n####", level)
-            for move in scorecard[level]:
-                print(move)
-                if level == 1 and move[0] == 1:
-                    print("played: winning move ", move[1:2])
-                    return move[1:2]
-                if level == 1 and move[0] != -1:
-                    safe_options.add(move)
-
-    print("\n\n###  Safe options:")
-    for move in safe_options:
-        print(move)
-
-    pop = safe_options.pop()
-    print("played: safe move ", pop[1:3])
-    return pop[1:3]
 
 def main():
     

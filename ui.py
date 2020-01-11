@@ -1,3 +1,4 @@
+import p5
 from p5 import *
 from time import sleep
 from ai import *
@@ -53,37 +54,64 @@ def setup():
     size(grid_size, grid_size + text_area)
     
 
+def draw_button(pos_x, pos_y, length_x, length_y, text="MyButton", fill_color=200, stroke_weight_num=5,):
+
+    fill(200)
+    stroke(Color("#CCCCCC"))
+    stroke_weight(2)
+    rect((pos_x, pos_y), length_x, length_y)
+    stroke(Color("#999999"))
+    line((pos_x, pos_y + length_y), (pos_x + length_x, pos_y + length_y))
+    line((pos_x + length_x , pos_y ), (pos_x + length_x, pos_y + length_y))
+    
+
+def draw_board():
+    
+    global bg
+    global run_once
+    global section
+    global grid_size
+
+    if run_once:
+        background(bg)
+        run_once = not run_once
+    
+    fill(255)
+    stroke_weight(8)
+    stroke("black")
+    line((0, 4), (grid_size, 4))  # Top line
+    line((4, 0), (4, grid_size))  # Left
+    line((section[0], 0), (section[0], section[2]))  # Mid vertical 1
+    line((section[1], 0), (section[1], section[2]))  # Mid vertical 2
+    line((0, section[0]), (section[2], section[0]))  # Mid horizontal 1
+    line((0, section[1]), (section[2], section[1]))  # Mid horizontal 2
+    line((grid_size - 4, 0), (grid_size - 4, grid_size))  # right line
+    line((0, grid_size), (grid_size, grid_size))  # Bottom line
+
+    
     
 def draw():
     global section
     global grid_size
-    global run_once
-    global bg
-    
-    if run_once:
-        background(bg)
-        run_once = not run_once
-    f = create_font("/home/patz/.config/google-chrome/Default/Extensions/pioclpoplcdbaefihamjohnefbikjilc/7.12.3_0/res/range-mono-medium.ttf", size = 20)
+
+    draw_board()
+
+    f = create_font("fonts/range-mono.ttf", size = 20)
     text_font(f)
+    
     fill(125)
     stroke_weight(8)
-    square((unit, grid_size + unit), unit*2)
-    square((unit*5, grid_size + unit), unit*2)
+
+    draw_button(unit, grid_size + unit, unit*2, unit)
+    # square((unit, grid_size + unit), unit*2)
+    draw_button(unit*5, grid_size + unit, unit*2, unit)
+    # square((unit*5, grid_size + unit), unit*2)
+
     fill(0)
+    stroke_weight(8)
     text("HvC",(unit * 1.6, grid_size + (unit*1.7)))
     text("HvH", (unit * 5.6, grid_size + (unit*1.7)))
-    fill(255)
-    line((0, 4), (grid_size, 4)) # Top line
-    line((4, 0), (4, grid_size)) # Left
-    line((section[0], 0), (section[0], section[2])) # Mid vertical 1
-    line((section[1], 0), (section[1], section[2]))  # Mid vertical 2
-    line((0, section[0]), (section[2], section[0]))  # Mid horizontal 1
-    line((0, section[1]), (section[2], section[1]))  # Mid horizontal 2
-    line((grid_size - 4, 0), (grid_size - 4, grid_size)) # right line 
-    line((0, grid_size), (grid_size, grid_size )) # Bottom line
-    # fill(10, 102, 153, 255)
-    # text("New Game!", (30, grid_size + 100))
-    
+
     if not is_human:
         # sleep(0.5) # To simulate delay
         autoplay()
@@ -102,8 +130,8 @@ def autoplay():
         print("Game has ended. Computer waiting for human to reset")
         return
 
-    row, col = dumb_02(game_grid)
-    # row, col = impossible_ai(game_grid)
+    # row, col = dumb_02(game_grid)
+    row, col = impossible_ai(game_grid)
 
     play_turn(row, col)
 
@@ -135,16 +163,6 @@ def mouse_clicked():
         print("Restarting Game: Human Vs Human")
         mode = "2H"
         setup()
-
-    # else:
-    #     print("mouse_x expected between:", 
-    #             unit, "and", unit * 3, "recvd:",  mouse_x)
-        
-    #     print("mouse_y expected between:",
-    #             grid_size + unit, "and", grid_size + (unit * 3),
-    #             "recvd:",  mouse_y)
-        
-    # square((unit*5, grid_size + unit), unit*2)
 
     if game_restart:
         setup()
@@ -211,7 +229,7 @@ def draw_o(row, col):
     global unit
     global game_grid
     stroke("Blue")
-    # fill("Blue")
+    fill("White")
     stroke_weight(6)
     center = (section[col] - unit*2, section[row] - unit*2)
     circle(center, unit*2)
